@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('product_id');
             $table->string('serial')->unique();
             $table->string('batch')->nullable();
-            $table->integer('warranty_days')->nullable();
+            $table->integer('warranty_months')->nullable();
             $table->foreignId('recharge_group_id')->nullable();
             $table->foreignId('customer_id')->nullable();
             $table->dateTime('registered_at')->nullable();

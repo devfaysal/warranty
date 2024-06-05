@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Imports\UnitImporter;
 use App\Filament\Resources\UnitResource\Pages;
 use App\Filament\Resources\UnitResource\RelationManagers;
 use App\Models\Unit;
@@ -11,6 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,7 +39,7 @@ class UnitResource extends Resource
                     ->required(),
                 Select::make('recharge_group_id')
                     ->relationship(name: 'rechargeGroup', titleAttribute: 'name'),
-                TextInput::make('warranty_days')
+                TextInput::make('warranty_months')
                     ->numeric()
                     ->minValue(1)
                     ->required(),
@@ -61,7 +63,7 @@ class UnitResource extends Resource
                     ->searchable(),
                 TextColumn::make('registered_at')
                     ->searchable(),
-                TextColumn::make('warranty_days')
+                TextColumn::make('warranty_months')
                     ->searchable(),
             ])
             ->filters([
@@ -74,6 +76,10 @@ class UnitResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            ->headerActions([
+                ImportAction::make()
+                    ->importer(UnitImporter::class)
             ]);
     }
 
