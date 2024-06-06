@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class RechargeGroup extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 }

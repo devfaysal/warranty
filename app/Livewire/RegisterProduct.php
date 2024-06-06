@@ -4,12 +4,14 @@ namespace App\Livewire;
 
 use App\Enums\ConnectionType;
 use App\Enums\MobileOperator;
-use Filament\Forms\Components\MarkdownEditor;
+use App\Models\Customer;
+use App\Models\Unit;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Livewire\Component;
 
 class RegisterProduct extends Component implements HasForms
@@ -55,7 +57,41 @@ class RegisterProduct extends Component implements HasForms
 
     public function create(): void
     {
-        dd($this->form->getState());
+        //Check if the serial is exists in DB
+        $serial = $this->data['serial'];
+        $unit = Unit::query()
+            ->where('serial', $serial)
+            ->whereNull('registered_at')
+            ->first();
+        if (is_null($unit)) {
+            Notification::make()
+                ->title('Wrong serial number entered')
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        //Update or Create Customer
+        $customer = Customer::updateOrCreate(
+            ['mobile_number' => $this->data['mobile_number']],
+            [
+                'name' => $this->data['name'],
+                'mobile_operator' => $this->data['mobile_operator'],
+                'connection_type' => $this->data['connection_type'],
+            ]
+        );
+
+        $unit->update([
+            'customer_id' => $customer->id,
+            'registered_at' => now(),
+        ]);
+
+        $this->data = [];
+        Notification::make()
+            ->title('Product Registered successfully')
+            ->success()
+            ->send();
     }
 
     public function render()
