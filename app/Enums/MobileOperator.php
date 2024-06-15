@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum MobileOperator: string
+use Filament\Support\Contracts\HasLabel;
+
+enum MobileOperator: string implements HasLabel
 {
     case Grameenphone = 'GP';
     case Banglalink = 'BL';
@@ -13,6 +15,13 @@ enum MobileOperator: string
 
     public function getLabel(): ?string
     {
-        return $this->name;
+        return match ($this) {
+            MobileOperator::Grameenphone => 'গ্রামীনফোন',
+            MobileOperator::Banglalink => 'বাংলালিংক',
+            MobileOperator::Airtel => 'এয়ারটেল',
+            MobileOperator::Robi => 'রবি',
+            MobileOperator::Teletalk => 'টেলিটক',
+            MobileOperator::Skitto => 'স্কিটো ',
+        };
     }
 }

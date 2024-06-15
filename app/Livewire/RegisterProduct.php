@@ -30,22 +30,33 @@ class RegisterProduct extends Component implements HasForms
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Your Name')
+                    ->label('আপনার নাম')
                     ->required()
-                    ->columnSpan(2),
+                    ->regex('%[a-zA-Z]%')
+                    ->columnSpan(2)
+                    ->validationMessages([
+                        'regex' => ':attribute ইংরেজী অক্ষরে লিখুন',
+                    ]),
                 TextInput::make('serial')
-                    ->label('Serial Number')
+                    ->label('সিরিয়াল নম্বর (কোথায় পাবেন)')
                     ->required()
+                    ->numeric()
                     ->columnSpan(2),
                 TextInput::make('mobile_number')
+                    ->label('মোবাইল নম্বর')
                     ->unique()
                     ->required()
+                    ->numeric()
                     ->columnSpan(2),
                 Select::make('mobile_operator')
+                    ->label('অপারেটর')
+                    ->placeholder('অপারেটর নির্বাচন করুন')
                     ->options(MobileOperator::class)
                     ->required()
                     ->columnSpan(1),
                 Select::make('connection_type')
+                    ->label('সিমের ধরণ')
+                    ->placeholder('সিমের ধরণ নির্বাচন করুন')
                     ->options(ConnectionType::class)
                     ->default(ConnectionType::Prepaid)
                     ->required()
@@ -57,6 +68,7 @@ class RegisterProduct extends Component implements HasForms
 
     public function create(): void
     {
+        dd($this->form->getState());
         //Check if the serial is exists in DB
         $serial = $this->data['serial'];
         $unit = Unit::query()

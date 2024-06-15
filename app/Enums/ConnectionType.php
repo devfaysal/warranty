@@ -2,13 +2,18 @@
 
 namespace App\Enums;
 
-enum ConnectionType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum ConnectionType: string implements HasLabel
 {
     case Prepaid = 'prepaid';
     case Postpaid = 'postpaid';
 
     public function getLabel(): ?string
     {
-        return $this->name;
+        return match ($this) {
+            ConnectionType::Prepaid => 'প্রিপেইড',
+            ConnectionType::Postpaid => 'পোস্টপেইড',
+        };
     }
 }
