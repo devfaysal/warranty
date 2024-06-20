@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         $user = User::factory()->create([
             'name' => 'Faysal Ahamed',
             'email' => 'faysal@surovigroup.net',
-            'password' => 'password',
+            'password' => '$urovigroup',
         ]);
         $user->assignRole('Super Admin');
     }
