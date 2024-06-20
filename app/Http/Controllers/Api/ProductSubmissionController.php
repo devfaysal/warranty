@@ -16,7 +16,6 @@ class ProductSubmissionController extends Controller
 {
     public function store(Request $request)
     {
-        dd($request->all());
         $rules = [
             'name' => ['required', 'regex:/^[a-zA-Z ]*$/'],
             'serial' => ['required', 'numeric', Rule::exists('units', 'serial')->whereNull('registered_at')],
