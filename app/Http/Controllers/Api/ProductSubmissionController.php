@@ -26,7 +26,8 @@ class ProductSubmissionController extends Controller
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             return response([
-                'response' => $validator->messages(),
+                'response' => 'Validation Error',
+                'validation_errors' => $validator->messages(),
                 'data' => $request->all(),
             ], 400);
         }
