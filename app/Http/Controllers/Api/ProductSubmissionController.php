@@ -19,7 +19,7 @@ class ProductSubmissionController extends Controller
         $rules = [
             'name' => ['required', 'regex:/^[a-zA-Z ]*$/'],
             'serial' => ['required', 'numeric', Rule::exists('units', 'serial')->whereNull('registered_at')],
-            'mobile_number' => ['required', 'numeric'],
+            'mobile_number' => ['required', 'numeric', 'phone:BD'],
             'mobile_operator' => ['required', Rule::enum(MobileOperator::class)],
             'connection_type' => ['required', Rule::enum(ConnectionType::class)],
         ];
@@ -32,6 +32,7 @@ class ProductSubmissionController extends Controller
             'name.regex' => 'আপনার নাম ইংরেজী অক্ষরে লিখুন',
             'serial.numeric' => 'সিরিয়াল নাম্বার অবশ্যই নাম্বার হতে হবে',
             'mobile_number.numeric' => 'মোবাইল নাম্বার অবশ্যই নাম্বার হতে হবে',
+            'mobile_number.phone' => 'মোবাইল নাম্বার অবশ্যই বাংলাদেশী হতে হবে',
             'exists' => 'সিরিয়াল নাম্বার ডাটাবেসে পাওয়া যায়নি',
         ];
         $validator = Validator::make($request->all(), $rules, $messages);
