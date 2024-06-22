@@ -23,7 +23,18 @@ class ProductSubmissionController extends Controller
             'mobile_operator' => ['required', Rule::enum(MobileOperator::class)],
             'connection_type' => ['required', Rule::enum(ConnectionType::class)],
         ];
-        $validator = Validator::make($request->all(), $rules);
+        $messages = [
+            'name.required' => 'আপনার নাম লিখুন',
+            'serial.required' => 'সিরিয়াল নাম্বার লিখুন',
+            'mobile_number.required' => 'মোবাইল নাম্বার লিখুন',
+            'mobile_operator.required' => 'অপারেটর নির্বাচন করুন',
+            'connection_type.required' => 'সিমের ধরণ নির্বাচন করুন',
+            'name.regex' => 'আপনার নাম ইংরেজী অক্ষরে লিখুন',
+            'serial.numeric' => 'সিরিয়াল নাম্বার অবশ্যই নাম্বার হতে হবে',
+            'mobile_number.numeric' => 'মোবাইল নাম্বার অবশ্যই নাম্বার হতে হবে',
+            'exists' => 'সিরিয়াল নাম্বার ডাটাবেসে পাওয়া যায়নি',
+        ];
+        $validator = Validator::make($request->all(), $rules, $messages);
         if ($validator->fails()) {
             return response([
                 'response' => 'Validation Error',
