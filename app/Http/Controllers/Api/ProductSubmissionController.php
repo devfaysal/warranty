@@ -7,6 +7,8 @@ use App\Enums\MobileOperator;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Unit;
+use App\Services\RechargeService;
+use Devfaysal\Muthofun\Facades\Muthofun;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Validator;
@@ -61,7 +63,14 @@ class ProductSubmissionController extends Controller
             'customer_id' => $customer->id,
             'registered_at' => now(),
         ]);
-        
+        Muthofun::send($data['mobile_number'], 'Your Product Registered Successfully!');
+        // $rechargeAmount = 10;
+        // $rechargeService->recharge(
+        //     $data['mobile_number'],
+        //     $data['mobile_operator'],
+        //     $rechargeAmount,
+        //     $data['connection_type']
+        // );
         return response([
             'response' => 'Product Registered Successfully',
         ], 200);

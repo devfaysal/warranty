@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "bezhansalleh/filament-shield": "^3.2",
+        "devfaysal/laravel-muthofun-sms": "^1.1",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.0",
         "laravel/tinker": "^2.9",
