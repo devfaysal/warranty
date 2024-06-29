@@ -33,6 +33,7 @@ class UnitResource extends Resource
                     ->required(),
                 TextInput::make('batch')
                     ->required(),
+                TextInput::make('registered_at'),
                 Select::make('recharge_group_id')
                     ->relationship(name: 'rechargeGroup', titleAttribute: 'name'),
                 TextInput::make('warranty_months')

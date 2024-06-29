@@ -4,8 +4,11 @@ namespace App\Livewire;
 
 use App\Enums\ConnectionType;
 use App\Enums\MobileOperator;
+use App\Jobs\RechargeJob;
 use App\Models\Customer;
+use App\Models\Recharge;
 use App\Models\Unit;
+use Devfaysal\Muthofun\Facades\Muthofun;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -68,7 +71,7 @@ class RegisterProduct extends Component implements HasForms
 
     public function create(): void
     {
-        dd($this->form->getState());
+        // dd($this->form->getState());
         //Check if the serial is exists in DB
         $serial = $this->data['serial'];
         $unit = Unit::query()
@@ -98,7 +101,20 @@ class RegisterProduct extends Component implements HasForms
             'customer_id' => $customer->id,
             'registered_at' => now(),
         ]);
+        $message = 'Dear ' . $this->data['name'] . ', Your Product (' . $this->data['serial'] . ') Registered Successfully!';
+        Muthofun::send($this->data['mobile_number'], $message);
 
+        if($unit->rechargeGroup->count()){
+            $recharge = Recharge::create([
+                'unit_id' => $unit->id,
+                'mobile_no' => $customer->mobile_number,
+                'mobile_operator' => $customer->mobile_operator,
+                'connection_type' => $customer->connection_type,
+                'amount' => $unit->rechargeGroup->amount,
+            ]);
+            RechargeJob::dispatch($recharge);
+        }
+        
         $this->data = [];
         Notification::make()
             ->title('Product Registered successfully')

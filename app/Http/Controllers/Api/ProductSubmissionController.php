@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Enums\ConnectionType;
 use App\Enums\MobileOperator;
 use App\Http\Controllers\Controller;
+use App\Jobs\RechargeJob;
 use App\Models\Customer;
+use App\Models\Recharge;
 use App\Models\Unit;
 use App\Services\RechargeService;
 use Devfaysal\Muthofun\Facades\Muthofun;
@@ -63,14 +65,18 @@ class ProductSubmissionController extends Controller
             'customer_id' => $customer->id,
             'registered_at' => now(),
         ]);
-        Muthofun::send($data['mobile_number'], 'Your Product Registered Successfully!');
-        // $rechargeAmount = 10;
-        // $rechargeService->recharge(
-        //     $data['mobile_number'],
-        //     $data['mobile_operator'],
-        //     $rechargeAmount,
-        //     $data['connection_type']
-        // );
+        $message = 'Dear ' . $data['name'] . ', Your Product (' . $data['serial'] . ') Registered Successfully!';
+        Muthofun::send($data['mobile_number'], $message);
+        if ($unit->rechargeGroup->count()) {
+            $recharge = Recharge::create([
+                'unit_id' => $unit->id,
+                'mobile_no' => $customer->mobile_number,
+                'mobile_operator' => $customer->mobile_operator,
+                'connection_type' => $customer->connection_type,
+                'amount' => $unit->rechargeGroup->amount,
+            ]);
+            RechargeJob::dispatch($recharge);
+        }
         return response([
             'response' => 'Product Registered Successfully',
         ], 200);

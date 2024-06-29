@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Unit extends Model
 {
@@ -32,5 +33,10 @@ class Unit extends Model
     public function rechargeGroup(): BelongsTo
     {
         return $this->belongsTo(RechargeGroup::class);
+    }
+
+    public function recharge(): HasOne
+    {
+        return $this->hasOne(Recharge::class);
     }
 }

@@ -2,6 +2,8 @@
 namespace App\Services;
 
 use App\Enums\ConnectionType;
+use App\Enums\RechargeStatus;
+use App\Models\Recharge;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -31,18 +33,24 @@ class RechargeService
         return Str::random(15);
     }
 
-    public function recharge($mobile_no, $operator, $amount = 10, $connection_type = ConnectionType::Prepaid->value)
+    public function recharge(Recharge $recharge)
     {
         $data = [
             'user_id' => $this->user_id,
             'user_key' =>  $this->user_key,
             'unique_id' => $this->unique_id,
-            'connection_type' => $connection_type,
-            'amount' => $amount,
-            'operator' => $operator,
-            'mobile_no' => $mobile_no,
+            'mobile_no' => $recharge->mobile_no,
+            'operator' => $recharge->mobile_operator,
+            'connection_type' => $recharge->connection_type,
+            'amount' => $recharge->amount,
         ];
         $response = Http::post($this->url, $data);
-        return $response->status();
+        $response = $response->object();
+        $recharge->update([
+            'unique_id' => $this->unique_id,
+            'status' => $response->status == 200 ? RechargeStatus::Submitted : RechargeStatus::Failed,
+            'status_code' => $response->status,
+            'status_description' => $response->results,
+        ]);
     }
 }
