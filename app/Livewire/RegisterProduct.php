@@ -101,10 +101,11 @@ class RegisterProduct extends Component implements HasForms
             'customer_id' => $customer->id,
             'registered_at' => now(),
         ]);
+
         $message = 'Dear ' . $this->data['name'] . ', Your Product (' . $this->data['serial'] . ') Registered Successfully!';
         Muthofun::send($this->data['mobile_number'], $message);
-
-        if($unit->rechargeGroup->count()){
+        
+        if($unit->rechargeGroup){
             $recharge = Recharge::create([
                 'unit_id' => $unit->id,
                 'mobile_no' => $customer->mobile_number,
