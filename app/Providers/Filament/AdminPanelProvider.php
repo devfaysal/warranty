@@ -57,6 +57,7 @@ class AdminPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->plugins([
                 \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+                \FilipFonal\FilamentLogManager\FilamentLogManager::make(),
             ]);
     }
 }
