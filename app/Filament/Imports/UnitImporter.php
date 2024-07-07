@@ -26,17 +26,17 @@ class UnitImporter extends Importer
             ImportColumn::make('warranty_months')
                 ->numeric()
                 ->rules(['integer']),
+            ImportColumn::make('rechargeGroup')
+                ->relationship(),
         ];
     }
 
     public function resolveRecord(): ?Unit
     {
-        // return Unit::firstOrNew([
-        //     // Update existing records, matching them by `$this->data['column_name']`
-        //     'email' => $this->data['email'],
-        // ]);
-
-        return new Unit();
+        return Unit::firstOrNew([
+            // Update existing records, matching them by `$this->data['column_name']`
+            'serial' => $this->data['serial'],
+        ]);
     }
 
     public static function getCompletedNotificationBody(Import $import): string

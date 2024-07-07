@@ -4,12 +4,14 @@ namespace App\Filament\Resources;
 
 use App\Filament\Imports\UnitImporter;
 use App\Filament\Resources\UnitResource\Pages;
+use App\Models\RechargeGroup;
 use App\Models\Unit;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -70,9 +72,31 @@ class UnitResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                // Tables\Actions\BulkActionGroup::make([
+                //     Tables\Actions\DeleteBulkAction::make(),
+                // ]),
+                BulkAction::make('addRechargeGroup')
+                    ->label('Change Recharge Group')
+                    ->modalWidth('xl')
+                    ->modalHeading('Add Recharge Group to Selected Units')
+                    ->modalSubmitActionLabel('Add Recharge Groups')
+                    ->form([
+                        Select::make('rechargeGroupId')
+                            ->label('Recharge Group')
+                            ->options(RechargeGroup::pluck('name', 'id')->toArray())
+                            ->required(),
+                    ])
+                    ->action(function ($records, $data) {
+                        $selectedRecords = $records->pluck('id')->toArray();
+                        $rechargeGroup = RechargeGroup::findOrFail($data['rechargeGroupId']);
+                        Unit::whereIn('id', $selectedRecords)->each(function ($unit) use ($rechargeGroup) {
+                            $unit->update([
+                                'recharge_group_id' => $rechargeGroup->id,
+                            ]);
+                        });
+                    })
+                    
+                    ->deselectRecordsAfterCompletion(),
             ])
             ->headerActions([
                 ImportAction::make()
