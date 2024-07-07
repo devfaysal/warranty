@@ -9,10 +9,8 @@ use App\Jobs\RechargeJob;
 use App\Models\Customer;
 use App\Models\Recharge;
 use App\Models\Unit;
-use App\Services\RechargeService;
 use Devfaysal\Muthofun\Facades\Muthofun;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -66,9 +64,9 @@ class ProductSubmissionController extends Controller
             'registered_at' => now(),
         ]);
 
-        $message = 'Dear ' . $data['name'] . ', Your Product (' . $data['serial'] . ') Registered Successfully!';
+        $message = 'Dear '.$data['name'].', Your Product ('.$data['serial'].') Registered Successfully!';
         Muthofun::send($data['mobile_number'], $message);
-        
+
         if ($unit->rechargeGroup) {
             $recharge = Recharge::create([
                 'unit_id' => $unit->id,
@@ -79,6 +77,7 @@ class ProductSubmissionController extends Controller
             ]);
             RechargeJob::dispatch($recharge);
         }
+
         return response([
             'response' => 'Product Registered Successfully',
         ], 200);

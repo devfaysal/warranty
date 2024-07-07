@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Recharge;
-use App\Models\Unit;
 use App\Services\RechargeService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

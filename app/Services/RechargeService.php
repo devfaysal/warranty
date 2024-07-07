@@ -1,7 +1,7 @@
 <?php
+
 namespace App\Services;
 
-use App\Enums\ConnectionType;
 use App\Enums\RechargeStatus;
 use App\Models\Recharge;
 use Illuminate\Support\Facades\Http;
@@ -10,8 +10,11 @@ use Illuminate\Support\Str;
 class RechargeService
 {
     protected $url = 'https://aamarapp.xyz/rechargeapi/api/v1/api.php';
+
     protected $user_id = '';
+
     protected $user_key = '';
+
     protected $unique_id = '';
 
     public function __construct()
@@ -37,7 +40,7 @@ class RechargeService
     {
         $data = [
             'user_id' => $this->user_id,
-            'user_key' =>  $this->user_key,
+            'user_key' => $this->user_key,
             'unique_id' => $this->unique_id,
             'mobile_no' => $recharge->mobile_no,
             'operator' => $recharge->mobile_operator,

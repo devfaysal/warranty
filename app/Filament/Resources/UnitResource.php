@@ -95,7 +95,7 @@ class UnitResource extends Resource
                             ]);
                         });
                     })
-                    
+
                     ->deselectRecordsAfterCompletion(),
             ])
             ->headerActions([
