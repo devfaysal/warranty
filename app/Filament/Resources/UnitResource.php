@@ -14,7 +14,10 @@ use Filament\Tables;
 use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class UnitResource extends Resource
 {
@@ -66,7 +69,10 @@ class UnitResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+                Filter::make('empty_recharge_group')
+                    ->query(fn (Builder $query): Builder => $query->whereNull('recharge_group_id')),
+                SelectFilter::make('rechargeGroup')
+                    ->relationship('rechargeGroup', 'name')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
