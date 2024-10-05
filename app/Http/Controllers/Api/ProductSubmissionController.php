@@ -21,7 +21,7 @@ class ProductSubmissionController extends Controller
         $rules = [
             'name' => ['required', 'regex:/^[a-zA-Z ]*$/'],
             'serial' => ['required', 'numeric', Rule::exists('units', 'serial')->whereNull('registered_at')],
-            'mobile_number' => ['required', 'numeric', 'phone:BD'],
+            'mobile_number' => ['required', 'digits:11', 'phone:BD'],
             'mobile_operator' => ['required', Rule::enum(MobileOperator::class)],
             'connection_type' => ['required', Rule::enum(ConnectionType::class)],
         ];
